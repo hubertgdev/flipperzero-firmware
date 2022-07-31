@@ -12,7 +12,29 @@
 
 ---
 
-## Clone the repository
+## Content
+
+### Applications
+
+- [Dice Roller](./applications/dice_roller): Generates a number between 1 and 6.
+
+### Project structure
+
+- `applications`    - Applications and services used in firmware
+- `assets`          - Assets used by applications and services
+- `core`            - Furi Core: os level primitives and helpers
+- `debug`           - Debug tool: GDB-plugins, SVD-file and etc
+- `docker`          - Docker image sources (used for firmware build automation)
+- `documentation`   - Documentation generation system configs and input files
+- `firmware`        - Firmware source code
+- `lib`             - Our and 3rd party libraries, drivers and etc...
+- `scripts`         - Supplementary scripts and python libraries home
+
+Also pay attention to `ReadMe.md` files inside of those directories.
+
+## Work on this repository
+
+### Clone the repository
 
 Since the repository contains submodules, be sure to use the `--recursive` option when cloning it.
 
@@ -28,7 +50,7 @@ git remote add upstream https://github.com/flipperdevices/flipperzero-firmware.g
 
 *Note: I usually work with the `release` branch of the original repository, making me sure that the firmware is stable. Feel free to use the `dev` branch if you want to use beta features.*
 
-## Setup dev environment
+### Setup dev environment
 
 I use [Visual Studio Community](https://visualstudio.microsoft.com/fr/vs/community/) as my favorite IDE for this project, but you can add basically any IDE.
 
@@ -43,7 +65,7 @@ docker-compose up -d
 
 Also, in order to upload the sources to your *Flipper Zero* device, you'll need [qFlipper](https://flipperzero.one/update).
 
-## Compile and upload
+### Compile and upload
 
 Compile the sources with docker by running the following command:
 
@@ -61,17 +83,3 @@ Once the sources are compiled, you should now see a `.dfu` file in the `dist/` f
 * Kickstarter page: [kickstarter.com](https://www.kickstarter.com/projects/flipper-devices/flipper-zero-tamagochi-for-hackers)
 * Forum: [forum.flipperzero.one](https://forum.flipperzero.one/)
 * [Original firmware repository](https://github.com/flipperdevices/flipperzero-firmware)
-
-## Project structure
-
-- `applications`    - Applications and services used in firmware
-- `assets`          - Assets used by applications and services
-- `core`            - Furi Core: os level primitives and helpers
-- `debug`           - Debug tool: GDB-plugins, SVD-file and etc
-- `docker`          - Docker image sources (used for firmware build automation)
-- `documentation`   - Documentation generation system configs and input files
-- `firmware`        - Firmware source code
-- `lib`             - Our and 3rd party libraries, drivers and etc...
-- `scripts`         - Supplementary scripts and python libraries home
-
-Also pay attention to `ReadMe.md` files inside of those directories.
