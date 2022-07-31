@@ -47,3 +47,6 @@ build/
 
 # Toolchain
 toolchain*/
+
+# Custom
+.vs
