@@ -7,8 +7,8 @@
 #include <input/input.h>
 #include <stdlib.h>
 
-const uint8_t SCREEN_WIDTH = 128;
-const uint8_t SCREEN_HEIGHT = 64;
+#include "../../lib/muffindev/common.h"
+
 const uint8_t MIN_DICE_VALUE = 1;
 const uint8_t MAX_DICE_VALUE = 6;
 const uint8_t DICE_DOT_RADIUS = 4;
