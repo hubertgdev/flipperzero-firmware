@@ -37,6 +37,7 @@ App(
         "music_player",
         "snake_game",
         "bt_hid",
-        "dice_roller"
+        "dice_roller",
+        "lua_test"
     ],
 )

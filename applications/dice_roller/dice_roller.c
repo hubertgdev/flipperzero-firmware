@@ -22,7 +22,7 @@ typedef struct {
 } DiceState;
 
 /**
- * @brief Defines the type of an event from the device
+ * @brief Defines the type of an event from the device.
  */
 typedef enum {
     EventTypeTick,
