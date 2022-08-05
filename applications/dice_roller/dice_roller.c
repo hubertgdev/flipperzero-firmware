@@ -47,8 +47,6 @@ static void render_callback(Canvas* const canvas, void* ctx) {
         return;
     }
 
-    canvas_set_font(canvas, FontPrimary);
-
     uint8_t center_x    = SCREEN_WIDTH / 2;
     uint8_t center_y    = SCREEN_HEIGHT / 2;
     uint8_t left        = center_x - DICE_DOT_RADIUS - DICE_DOT_SPACE;
@@ -118,8 +116,8 @@ static void render_callback(Canvas* const canvas, void* ctx) {
         canvas_draw_disc(canvas, left - DICE_DOT_RADIUS / 2, bottom - DICE_DOT_RADIUS / 2, DICE_DOT_RADIUS);
         // Bottom-right
         canvas_draw_disc(canvas, right - DICE_DOT_RADIUS / 2, bottom - DICE_DOT_RADIUS / 2, DICE_DOT_RADIUS);
-    }
-    else {
+    } else {
+        canvas_set_font(canvas, FontPrimary);
         canvas_draw_str_aligned(canvas, center_x - 2, center_y - 4, AlignRight, AlignBottom, "?");
     }
 
@@ -129,11 +127,11 @@ static void render_callback(Canvas* const canvas, void* ctx) {
 /**
  * @brief Called when the app received an input.
  */
-static void input_callback(InputEvent* input_event, osMessageQueueId_t event_queue) {
+static void input_callback(InputEvent* input_event, FuriMessageQueue* event_queue) {
     furi_assert(event_queue);
 
     AppEvent evt = {.type = EventTypeKey, .input = *input_event};
-    osMessageQueuePut(event_queue, &evt, 0, osWaitForever);
+    furi_message_queue_put(event_queue, &evt, FuriWaitForever);
 }
 
 /**
@@ -150,7 +148,7 @@ int32_t dice_roller_app(void* p) {
     UNUSED(p);
     srand(DWT->CYCCNT);
 
-    osMessageQueueId_t event_queue = osMessageQueueNew(8, sizeof(AppEvent), NULL);
+    FuriMessageQueue* event_queue = furi_message_queue_alloc(8, sizeof(AppEvent));
 
     // Setup the plugin state
     DiceState* dice_state = malloc(sizeof(DiceState));
@@ -170,16 +168,16 @@ int32_t dice_roller_app(void* p) {
     view_port_input_callback_set(view_port, input_callback, event_queue);
 
     // Open GUI and register our viewport
-    Gui* gui = furi_record_open("gui");
+    Gui* gui = furi_record_open(RECORD_GUI);
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
 
     // App loop
     AppEvent evt;
     for(bool processing = true; processing;) {
-        osStatus_t event_status = osMessageQueueGet(event_queue, &evt, NULL, 100);
+        FuriStatus event_status = furi_message_queue_get(event_queue, &evt, 100);
         DiceState* dice_state = (DiceState*)acquire_mutex_block(&state_mutex);
 
-        if(event_status == osOK) {
+        if(event_status == FuriStatusOk) {
             if(evt.input.type == InputTypePress) {
                 switch (evt.input.key) {
                     case InputKeyOk: {
@@ -207,9 +205,11 @@ int32_t dice_roller_app(void* p) {
     // End the process
     view_port_enabled_set(view_port, false);
     gui_remove_view_port(gui, view_port);
-    furi_record_close("gui");
+    furi_record_close(RECORD_GUI);
     view_port_free(view_port);
-    osMessageQueueDelete(event_queue);
+    furi_message_queue_free(event_queue);
+    delete_mutex(&state_mutex);
+    free(dice_state);
 
     return 0;
 }
